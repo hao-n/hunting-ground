@@ -1,0 +1,25 @@
+name: Main
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: self-hosted
+    container: $${{matrix.container}}
+    strategy:
+      matrix:
+        container:
+          - actions/virtual-environments:ubuntu-latest
+          - actions/virtual-environments:ubuntu-18.04
+  
+    steps:
+      - uses: actions/checkout@v2
+      - name: Print hello world
+        uses: actions/echo@v2
+        with:
+          message: "Hello world"
+      - name: Run shell script
+        run: |
+          echo 'Hello world'
+          ls -al
+
