@@ -9,7 +9,9 @@ jobs:
     strategy:
       matrix:
         container:
-          - ubuntu:latest
+          - bugswarm/images:ubuntu-16.04
+          - bugswarm/images:ubuntu-18.04
+          - bugswarm/images:ubuntu-20.04
   
     steps:
       - uses: actions/checkout@v2
