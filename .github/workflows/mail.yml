@@ -6,11 +6,10 @@ jobs:
     name: Build and test
     runs-on: self-hosted
     container: $${{matrix.container}}
-    strategy:
+    Strategy:
       matrix:
         container:
-          - actions/virtual-environments:ubuntu-latest
-          - actions/virtual-environments:ubuntu-18.04
+          - ubuntu:latest
   
     steps:
       - uses: actions/checkout@v2
