@@ -6,7 +6,7 @@ jobs:
     name: Build and test
     runs-on: self-hosted
     container: $${{matrix.container}}
-    Strategy:
+    strategy:
       matrix:
         container:
           - ubuntu:latest
