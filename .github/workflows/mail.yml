@@ -5,7 +5,7 @@ jobs:
   build:
     name: Build and test
     runs-on: self-hosted
-    container: $${{matrix.container}}
+    container: $${{ matrix.container }}
     strategy:
       fail-fast: false
       matrix:
