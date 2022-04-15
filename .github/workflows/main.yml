@@ -20,4 +20,7 @@ jobs:
         run: |
           echo 'Hello world'
           ls -al
+      - name: Run python script
+        run: |
+          python src/pitching_machine.py
 
