@@ -22,7 +22,7 @@ jobs:
           ls -al
       - uses: actions/setup-python@v3
         with:
-          python-version: '3.x' 
+          python-version: '3.7' 
       - name: Run python script
         run: |
           python src/pitching_machine.py
