@@ -10,9 +10,9 @@ jobs:
       fail-fast: false
       matrix:
         container:
-          - ubuntu:latest
-          - ubuntu:bionic
-          - ubuntu:xenial
+          - bugswarm/images:ubuntu-16.04
+          - bugswarm/images:ubuntu-18.04
+          - bugswarm/images:ubuntu-20.04
   
     steps:
       - uses: actions/checkout@v2
@@ -20,13 +20,6 @@ jobs:
         run: |
           echo 'Hello world'
           ls -al
-      - name: Install dependencies for Python
-        run: |
-          apt update
-          apt install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
-      - uses: actions/setup-python@v3
-        with:
-          python-version: '3.7' 
       - name: Run python script
         run: |
           python src/pitching_machine.py
