@@ -22,5 +22,5 @@ jobs:
           ls -al
       - name: Run python script
         run: |
-          python src/pitching_machine.py
+          python3 src/pitching_machine.py
 
