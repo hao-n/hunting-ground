@@ -23,4 +23,8 @@ jobs:
       - name: Run python script
         run: |
           python3 src/pitching_machine.py
+      - name: Link with flake8
+        run: |
+          pip3 install flake8==3.7.9
+          flake8 src/pitching_machine.py
 
