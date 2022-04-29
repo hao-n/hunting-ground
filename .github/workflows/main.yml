@@ -21,7 +21,7 @@ jobs:
           echo 'Hello world'
           ls -al
       - name: Set up Python 
-        ues: actions/setup-python@v2
+        uses: actions/setup-python@v2
         with:
           python-version: 3.8
       - name: Run python script
