@@ -43,5 +43,5 @@ jobs:
           distribution: zulu
           cache: maven
       - name: Install JDK and build project
-        run: ./mvnw verify -Pjava19
+        run: echo "mimic build command"
         continue-on-error: false
