@@ -10,9 +10,9 @@ jobs:
       fail-fast: false
       matrix:
         container:
-          - ghcr.io/catthehacker/ubuntu:act-16.04
-          - ghcr.io/catthehacker/ubuntu:act-18.04
-          - ghcr.io/catthehacker/ubuntu:act-20.04
+          - ghcr.io/catthehacker/ubuntu:runner-16.04
+          - ghcr.io/catthehacker/ubuntu:runner-18.04
+          - ghcr.io/catthehacker/ubuntu:runner-20.04
   
     steps:
       - uses: actions/checkout@v2
