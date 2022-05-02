@@ -20,6 +20,9 @@ jobs:
         run: |
           echo 'Hello world'
           ls -al
+      - name: Set up glibc6
+        run: |
+          sudo apt install glibc6
       - name: Set up Python 
         uses: actions/setup-python@v2
         with:
