@@ -15,8 +15,6 @@ import java.io.UncheckedIOException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-aloha!
-
 public class TestDataProvider {
 
     private static final String NOTICE_JSON_PATH = "data/notice.json";
