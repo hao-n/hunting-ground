@@ -10,9 +10,9 @@ jobs:
       fail-fast: false
       matrix:
         container:
-          - ghcr.io/catthehacker/ubuntu:runner-16.04
-          - ghcr.io/catthehacker/ubuntu:runner-18.04
-          - ghcr.io/catthehacker/ubuntu:runner-20.04
+          - ghcr.io/catthehacker/ubuntu:act-16.04
+          - ghcr.io/catthehacker/ubuntu:act-18.04
+          - ghcr.io/catthehacker/ubuntu:act-20.04
   
     steps:
       - uses: actions/checkout@v2
@@ -21,7 +21,7 @@ jobs:
           echo 'Hello world'
           ls -al
       - name: Set up Python 
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v1
         with:
           python-version: '3.6'
       - name: Run python script
