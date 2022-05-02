@@ -10,9 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         container:
-          - ghcr.io/catthehacker/ubuntu:act-16.04
-          - ghcr.io/catthehacker/ubuntu:act-18.04
-          - ghcr.io/catthehacker/ubuntu:act-20.04
+          - nektos/act-environments-ubuntu:18.04
   
     steps:
       - uses: actions/checkout@v2
@@ -23,7 +21,7 @@ jobs:
       - name: Set up Python 
         uses: actions/setup-python@v2
         with:
-          python-version: '3.5'
+          python-version: '3.6'
       - name: Run python script
         run: |
           python src/pitching_machine.py
