@@ -33,7 +33,14 @@ jobs:
 
   hotspot-ea:
     name: HotSpot (EA)
-    runs-on: ubuntu-18.04
+    runs-on: self-hosted
+    container: ${{ matrix.container }}
+    strategy:
+      fail-fast: false
+      matrix:
+        container:
+          - bugswarm/githubactionsjobrunners:ubuntu-18.04-aug2021
+          - bugswarm/githubactionsjobrunners:ubuntu-20.04-aug2021
     continue-on-error: true
     steps:
       - uses: actions/checkout@v3
