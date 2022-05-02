@@ -10,7 +10,8 @@ jobs:
       fail-fast: false
       matrix:
         container:
-          - nektos/act-environments-ubuntu:18.04
+          - bugswarm/githubactionsjobrunners:ubuntu-20.04
+          - bugswarm/githubactionsjobrunners:ubuntu-18.04
   
     steps:
       - uses: actions/checkout@v2
