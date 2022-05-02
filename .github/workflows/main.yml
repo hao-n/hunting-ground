@@ -31,3 +31,17 @@ jobs:
           pip install flake8==3.7.9
           flake8 src/pitching_machine.py
 
+  hotspot-ea:
+    name: HotSpot (EA)
+    runs-on: ubuntu-18.04
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v2
+        with:
+          java-version: 19-ea
+          distribution: zulu
+          cache: maven
+      - name: Install JDK and build project
+        run: ./mvnw verify -Pjava19
+        continue-on-error: false
