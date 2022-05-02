@@ -21,9 +21,9 @@ jobs:
           echo 'Hello world'
           ls -al
       - name: Set up Python 
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
-          python-version: 3.7
+          python-version: '3.x'
       - name: Run python script
         run: |
           python3 src/pitching_machine.py
