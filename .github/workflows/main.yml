@@ -4,17 +4,25 @@ on: [push, pull_request]
 jobs:
   build:
     name: Build and test
-    runs-on: ubuntu-18.04
+    runs-on: self-hosted
+    container: ${{ matrix.container }}
+    strategy:
+      fail-fast: false
+      matrix:
+        container:
+          - bugswarm/githubactionsjobrunners:ubuntu-18.04-aug2021
+          - bugswarm/githubactionsjobrunners:ubuntu-20.04-aug2021
+  
     steps:
       - uses: actions/checkout@v2
       - name: Run shell script
         run: |
           echo 'Hello world'
           ls -al
-      - name: Set up Python 
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.6'
+      # - name: Set up Python 
+      #   uses: actions/setup-python@v2
+      #   with:
+      #     python-version: '3.6'
       - name: Run python script
         run: |
           python src/pitching_machine.py
