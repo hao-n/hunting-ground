@@ -1,0 +1,146 @@
+import net.bytebuddy.build.gradle.transform.GradleTypeTransformer
+
+import java.util.regex.Pattern
+
+ext.pom = new XmlSlurper().parse(file('./pom.xml'))
+ext.outerPom = new XmlSlurper().parse(file('../pom.xml'))
+
+group = pom.parent.groupId.text().toString()
+version = pom.parent.version.text().toString()
+description = pom.description.text().toString()
+
+compileJava {
+    options.warnings = true
+    options.deprecation = true
+    options.compilerArgs += ["-Xlint:all,-options,-processing"]
+}
+
+compileTestJava {
+    options.warnings = true
+    options.deprecation = true
+    options.compilerArgs += ["-Xlint:all,-options,-processing"]
+}
+
+// Gradle cannot process all version strings such that JavaVersion.current() fails.
+def raw = System.getProperty("java.version")
+def current
+if (!raw.startsWith("1.") && raw.contains(".")) {
+    current = JavaVersion.toVersion(raw.substring(0, raw.indexOf('.')))
+} else {
+    current = JavaVersion.toVersion(raw)
+}
+
+def sourceVersion = System.getProperty("net.bytebuddy.gradle.version.source")
+if (sourceVersion != null) {
+    sourceCompatibility = JavaVersion.toVersion(sourceVersion)
+} else if (current > JavaVersion.VERSION_1_9) {
+    sourceCompatibility = JavaVersion.VERSION_1_7
+} else if (current > JavaVersion.VERSION_1_8) {
+    sourceCompatibility = JavaVersion.VERSION_1_6
+} else {
+    sourceCompatibility = JavaVersion.VERSION_1_5
+}
+def targetVersion = System.getProperty("net.bytebuddy.gradle.version.target")
+if (targetVersion != null) {
+    targetCompatibility = JavaVersion.toVersion(targetVersion)
+} else if (current > JavaVersion.VERSION_1_9) {
+    targetCompatibility = JavaVersion.VERSION_1_7
+} else if (current > JavaVersion.VERSION_1_8) {
+    targetCompatibility = JavaVersion.VERSION_1_6
+} else {
+    targetCompatibility = JavaVersion.VERSION_1_5
+}
+
+logger.info("Compiling class files from version ${sourceCompatibility} to ${targetCompatibility}.")
+
+// Without the extras property, creating a javadoc artifact is not necessary.
+if (Boolean.getBoolean('net.bytebuddy.misc.extras')) {
+    if (gradle.gradleVersion.startsWith("2.")) { // support legacy version
+        task javadocJar(type: Jar, dependsOn: javadoc) {
+            classifier = 'javadoc'
+            from javadoc.destinationDir
+        }
+    } else {
+        task javadocJar(type: Jar, dependsOn: javadoc) {
+            archiveClassifier.set('javadoc')
+            from javadoc.destinationDir
+        }
+    }
+} else {
+    task javadocJar {
+        logger.info('javadoc is only generated if net.bytebuddy.misc.extras is set to true')
+    }
+}
+
+test {
+    systemProperty('net.bytebuddy.test.version', version)
+    systemProperty('net.bytebuddy.test.integration', Boolean.getBoolean('net.bytebuddy.test.integration'))
+}
+
+task copyLicense(type: Copy) {
+    from '..'
+    include 'LICENSE', 'NOTICE'
+    into "$buildDir/resources/main/META-INF"
+    def pattern = Pattern.compile('\\$\\{([a-zA-Z0-9\\-._]+)}')
+    filter { String line ->
+        def matcher = pattern.matcher(line)
+        def buffer = new StringBuffer()
+        while (matcher.find()) {
+            def property = matcher.group(1)
+            String resolved
+            if (property.equals("current.year")) {
+                resolved = Calendar.getInstance().get(Calendar.YEAR)
+            } else if (property.startsWith("project.")) {
+                resolved = outerPom.getProperty(property.substring("project.".length()))
+            } else {
+                resolved = outerPom.properties.getProperty(property)
+            }
+            if (resolved == null) {
+                throw new GradleException("Could not resolve property $property")
+            }
+            logger.debug("Resolved $property to $resolved")
+            matcher.appendReplacement(buffer, resolved)
+        }
+        matcher.appendTail(buffer).toString()
+    }
+}
+
+jar.dependsOn copyLicense
+
+
+def transformer = new GradleTypeTransformer();
+if (gradle.gradleVersion.startsWith("2.")) { // support legacy version
+    jar.doLast {
+        transformer.transform(jar.archivePath)
+    }
+} else {
+    validatePlugins {
+        enabled = false
+    }
+    jar.doLast {
+        transformer.transform(jar.archiveFile.get().asFile)
+    }
+}
+
+if (gradle.gradleVersion.startsWith("2.")) { // support legacy version
+    gradlePlugin {
+        plugins {
+            byteBuddyPlugin {
+                id = pom.parent.groupId.text().toString() + '.' + pom.artifactId.text().toString()
+                description = pom.description.text().toString()
+                implementationClass = 'net.bytebuddy.build.gradle.ByteBuddyPlugin'
+            }
+        }
+    }
+} else {
+    gradlePlugin {
+        plugins {
+            byteBuddyPlugin {
+                id = pom.parent.groupId.text().toString() + '.' + pom.artifactId.text().toString()
+                displayName = pom.name.text().toString()
+                description = pom.description.text().toString()
+                implementationClass = 'net.bytebuddy.build.gradle.ByteBuddyPlugin'
+            }
+        }
+    }
+}

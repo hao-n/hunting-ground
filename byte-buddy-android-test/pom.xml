@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.bytebuddy</groupId>
+        <artifactId>byte-buddy-parent</artifactId>
+        <version>1.12.11-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>byte-buddy-android-test</artifactId>
+    <packaging>${android.sort}</packaging>
+
+    <name>Byte Buddy for Android (test application)</name>
+    <description>An Android test application that runs Byte Buddy in an Android environment.</description>
+
+    <properties>
+        <android.sort>pom</android.sort>
+        <android.build.group>com.simpligility.maven.plugins</android.build.group>
+        <version.maven.android>4.6.0</version.maven.android>
+        <version.android.sdk.platform>4</version.android.sdk.platform>
+    </properties>
+
+    <!--
+      Be aware that not all IDEs automatically add all dependencies and their transitive dependencies to the
+      build path of the built APK. Therefore, the dx.jar dependency sometimes needs to be added explicitly
+      to the project build. This is further described here:
+      http://stackoverflow.com/questions/14765910/could-not-find-class-xxx-referenced-from-method-xxx-yyy
+
+      This module is activated by the 'android' Maven profile.
+    -->
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>byte-buddy-android</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
+            <version>${version.android.sdk}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <!-- The Android build is not active unless the 'android' profile is set since it requires an installed Android SDK. -->
+        <profile>
+            <id>android</id>
+            <properties>
+                <android.sort>apk</android.sort>
+            </properties>
+        </profile>
+        <!-- The maintained version of the Android build plugin does not support Java 6. -->
+        <profile>
+            <id>java6-compatibility-android</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <jdk>1.6</jdk>
+            </activation>
+            <properties>
+                <android.build.group>com.jayway.maven.plugins.android.generation2</android.build.group>
+                <version.maven.android>4.0.0-rc.2</version.maven.android>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>..</directory>
+                <targetPath>META-INF</targetPath>
+                <filtering>true</filtering>
+                <includes>
+                    <include>LICENSE</include>
+                    <include>NOTICE</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <!-- Build Android application from Maven. -->
+            <plugin>
+                <groupId>${android.build.group}</groupId>
+                <artifactId>android-maven-plugin</artifactId>
+                <version>${version.maven.android}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <run>
+                        <debug>true</debug>
+                    </run>
+                    <sdk>
+                        <platform>${version.android.sdk.platform}</platform>
+                    </sdk>
+                    <undeployBeforeDeploy>true</undeployBeforeDeploy>
+                    <release>false</release>
+                    <androidManifestFile>AndroidManifest.xml</androidManifestFile>
+                    <resourceDirectory>res</resourceDirectory>
+                </configuration>
+            </plugin>
+            <!-- This artifact should not be deployed. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>${version.plugin.deploy}</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <!-- Mutation testing is not required for this example project. -->
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>${version.plugin.pitest}</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${version.plugin.resources}</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>resources</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
