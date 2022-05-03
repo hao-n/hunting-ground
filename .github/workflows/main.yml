@@ -12,6 +12,7 @@ jobs:
         container:
           - bugswarm/githubactionsjobrunners:ubuntu-18.04-aug2021
           - bugswarm/githubactionsjobrunners:ubuntu-20.04-aug2021
+          - docker.io/nektos/act-environments-ubuntu:18.04
   
     steps:
       - uses: actions/checkout@v2
