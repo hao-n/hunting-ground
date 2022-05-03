@@ -12,7 +12,8 @@ jobs:
           - bugswarm/githubactionsjobrunners:ubuntu-18.04-aug2021
           - bugswarm/githubactionsjobrunners:ubuntu-20.04-aug2021
         java: [ 8, 11, 17, 18 ]
-    runs-on: ${{ matrix.container }}
+    runs-on: self-hosted
+    container: ${{ matrix.container }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v2
