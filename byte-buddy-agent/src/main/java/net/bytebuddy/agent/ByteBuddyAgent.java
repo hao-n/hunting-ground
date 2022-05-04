@@ -33,7 +33,6 @@ import java.security.ProtectionDomain;
 import java.util.*;
 import java.util.jar.*;
 
-This is a bug
 
 /**
  * <p>
