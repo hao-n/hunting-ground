@@ -20,8 +20,6 @@
 #define CODE_SIZE (SIZE_T) 1024
 #define MAX_ARGUMENT 1024
 
-this is a bug
-
 typedef HMODULE (WINAPI *GetModuleHandle_t)(LPCTSTR);
 typedef FARPROC (WINAPI *GetProcAddress_t)(HMODULE, LPCSTR);
 typedef int (__stdcall *JVM_EnqueueOperation_t)(char *, char *, char *, char *, char *);
