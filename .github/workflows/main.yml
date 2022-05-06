@@ -33,6 +33,7 @@ jobs:
           - bugswarm/githubactionsjobrunners:ubuntu-18.04-aug2021
         java: [ 6, 7 ]
     runs-on: self-hosted
+    container: ${{ matrix.container }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/cache@v2
