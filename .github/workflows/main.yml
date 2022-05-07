@@ -93,8 +93,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [ 6, 7 ]
-    runs-on: ubuntu-18.04
+        java: [ 6 ]
+        container: 
+          - bugswarm/githubactionsjobrunners:ubuntu-18.04-aug2021
+          - bugswarm/githubactionsjobrunners:ubuntu-20.04-aug2021
+    runs-on: self-hosted
+    container: ${{ matrix.container }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/cache@v2
