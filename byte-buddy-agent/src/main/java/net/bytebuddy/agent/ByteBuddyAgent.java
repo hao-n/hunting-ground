@@ -33,7 +33,6 @@ import java.security.ProtectionDomain;
 import java.util.*;
 import java.util.jar.*;
 
-
 /**
  * <p>
  * The Byte Buddy agent provides a JVM {@link java.lang.instrument.Instrumentation} in order to allow Byte Buddy the
