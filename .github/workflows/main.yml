@@ -62,5 +62,5 @@ jobs:
           architecture: x64
           cache: maven
       - name: Build project
-        # run: ./mvnw jacoco:prepare-agent verify jacoco:report coveralls:report -DrepoToken=${{ secrets.coveralls }} -Pintegration -Pextras -Pchecks
-        run: echo "Mimic coverage report generation"
+        run: ./mvnw jacoco:prepare-agent verify jacoco:report coveralls:report -DrepoToken=${{ secrets.coveralls }} -Pintegration -Pextras -Pchecks
+        # run: echo "Mimic coverage report generation"
